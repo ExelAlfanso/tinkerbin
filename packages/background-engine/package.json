@@ -1,0 +1,11 @@
+{
+  "name": "@tinkerbin/background-engine",
+  "version": "0.1.0",
+  "type": "module",
+  "types": "./src/index.ts",
+  "exports": "./src/index.ts",
+  "dependencies": {
+    "effect": "^4.0.5",
+    "onnxruntime-web": "^1.30.0"
+  }
+}

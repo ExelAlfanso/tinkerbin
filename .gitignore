@@ -1,0 +1,16 @@
+node_modules
+dist
+.env
+.env.*
+*.map
+.wrangler
+.alchemy/
+.nuxt
+.output
+.dev.vars
+apps/web/public/assets/bg/
+.DS_Store
+*.log
+
+# Local agent coordination state
+/.orchestration/

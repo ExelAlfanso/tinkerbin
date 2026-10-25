@@ -1,0 +1,21 @@
+{
+  "name": "@tinkerbin/web",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "bun scripts/background-assets.ts public && nuxt dev",
+    "generate": "nuxt generate && bun scripts/background-assets.ts .output/public && bun scripts/static-output.ts .output/public",
+    "preview": "nuxt preview",
+    "typecheck": "nuxt typecheck"
+  },
+  "dependencies": {
+    "@tinkerbin/background-engine": "workspace:*",
+    "@tinkerbin/tools-core": "workspace:*",
+    "nuxt": "^4.6.2",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.9.0",
+    "vue-tsc": "^3.3.13"
+  }
+}

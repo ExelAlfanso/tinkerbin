@@ -1,0 +1,32 @@
+{
+  "name": "tinkerbin",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Tinkerbin: small, free creative tools that run in your browser. Static site, no backend.",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "type": "module",
+  "scripts": {
+    "dev": "bun --cwd apps/web dev",
+    "build": "bun --cwd apps/web generate",
+    "preview": "bun --cwd apps/web preview",
+    "deploy:cloudflare": "bun alchemy deploy --stage prod",
+    "typecheck": "bun --cwd apps/web typecheck",
+    "test": "bun test",
+    "check": "ultracite check",
+    "fix": "ultracite fix"
+  },
+  "devDependencies": {
+    "@alchemy.run/cloudflare": "https://pkg.alchemy.run/@alchemy.run/cloudflare/bb18acb",
+    "@effect/platform-bun": "^4.0.5",
+    "@effect/platform-node": "^4.0.5",
+    "alchemy": "https://pkg.alchemy.run/alchemy/bb18acb",
+    "effect": "^4.0.5",
+    "oxfmt": "^0.71.0",
+    "oxlint": "^1.86.0",
+    "typescript": "^5.9.0",
+    "ultracite": "8.0.2"
+  }
+}
