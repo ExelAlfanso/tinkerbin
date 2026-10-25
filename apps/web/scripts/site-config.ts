@@ -102,7 +102,8 @@ if (provider === "cloudflare" && !cloudflareToken) {
 }
 
 const adsEnabled = process.env.ADSENSE_ENABLED === "true";
-const publisherId = process.env.ADSENSE_PUBLISHER_ID || "";
+const publisherId =
+  process.env.ADSENSE_PUBLISHER_ID || "ca-pub-7272507490577483";
 if (adsEnabled && !/^(ca-)?pub-\d{8,20}$/.test(publisherId)) {
   throw new Error("ADSENSE_PUBLISHER_ID must look like pub-1234567890123456");
 }

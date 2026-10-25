@@ -10,7 +10,7 @@ Set these as build-time variables in Cloudflare Pages. Values are baked into pub
 | --- | --- |
 | `SITE_URL` | Canonical origin, for example `https://example.com`. Without it, pages are marked noindex and no sitemap is written. |
 | `CONTACT_EMAIL` | Address shown on `/contact/`. Without it, that page is noindex and omitted from the sitemap. |
-| `ADSENSE_ENABLED`, `ADSENSE_PUBLISHER_ID`, `ADSENSE_SLOTS` | Optional AdSense configuration. Disabled by default; `ADSENSE_SLOTS` is a JSON object with `top`, `content`, and `bottom` IDs. |
+| `ADSENSE_ENABLED`, `ADSENSE_PUBLISHER_ID`, `ADSENSE_SLOTS` | Production CI enables AdSense. Development and local builds default to disabled. The publisher ID defaults to `ca-pub-7272507490577483`. `ADSENSE_SLOTS` is an optional JSON object with `top`, `content`, and `bottom` IDs. |
 | `ANALYTICS_PROVIDER` | `none` (default), `cloudflare`, `plausible`, or `goatcounter`. |
 | `CF_BEACON_TOKEN`, `PLAUSIBLE_DOMAIN`, `GOATCOUNTER_URL` | Credentials/configuration for the selected analytics provider. Analytics honors Do Not Track and Global Privacy Control. |
 | `CSP_REPORT_ONLY` | Set `true` to report CSP violations without blocking while validating optional providers. |
