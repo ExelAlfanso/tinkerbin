@@ -42,7 +42,7 @@ bun install --frozen-lockfile
 bun run deploy:cloudflare
 ```
 
-Alchemy builds `apps/web/.output/public`, deploys it to the stable `prod` stage as an assets-only Worker, returns its URL, preserves folder routes with trailing slashes, and serves the generated `404.html` for unknown paths. The CLI previews the plan and asks before applying it. No custom domain is configured by this stack.
+Alchemy builds `apps/web/.output/public` and deploys it as an assets-only Worker. The `prod` stage serves `https://tinkerbin.alfanso.xyz`; the `dev` stage keeps its separate `workers.dev` URL. Cloudflare provisions the custom domain's DNS record and certificate when `alfanso.xyz` is an active zone in the deployment account. The site preserves folder routes with trailing slashes and serves the generated `404.html` for unknown paths. Set `SITE_URL=https://tinkerbin.alfanso.xyz` for a local production build; the production CI workflow sets it automatically.
 
 ## GitHub Actions CI/CD
 
@@ -65,11 +65,11 @@ Pull requests do not deploy or receive Cloudflare credentials. Each push deploym
 
 2. Create GitHub environments named `production` and `development`. Restrict their deployment branches to `master` and `dev`, respectively.
 
-3. Add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as GitHub Actions secrets. Repository secrets work for both environments when they share a Cloudflare account; use separate environment secrets when development and production must be isolated. The token needs account-level `Workers Scripts Write` and `Secrets Store Write` permissions for the static deployment and remote state store.
+3. Add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as GitHub Actions secrets. Repository secrets work for both environments when they share a Cloudflare account; use separate environment secrets when development and production must be isolated. The token needs account-level `Workers Scripts Write` and `Secrets Store Write` permissions for the static deployment and remote state store, plus zone-level `Workers Routes Write` on `alfanso.xyz` to attach the production custom domain.
 
    The workflow checks account access before deploying. Cloudflare error `6003: Invalid request headers` means the token secret needs checking first: enter only the raw API token, without `Bearer `, quotes, a command, or surrounding whitespace. If access still fails, confirm the token is active, belongs to the configured Account ID, has the permissions above, and is not blocked by expiry or IP restrictions. `alchemy provider check-env` only checks that the variables exist; it does not authenticate them.
 
-4. Set `SITE_URL` in each environment to that environment's canonical HTTPS origin. Add any optional build-time variables from the table above to each environment as needed. If production and development use separate Cloudflare accounts, bootstrap the Alchemy state store once in each account.
+4. Set `SITE_URL` in the development environment to its canonical HTTPS origin. Production uses `https://tinkerbin.alfanso.xyz` automatically. Add any optional build-time variables from the table above to each environment as needed. If production and development use separate Cloudflare accounts, bootstrap the Alchemy state store once in each account.
 
 Without `SITE_URL`, the existing build intentionally marks the site noindex and omits its sitemap. The `dev` deployment starts after a `dev` branch is pushed to GitHub.
 
