@@ -21,16 +21,6 @@ export default defineNuxtConfig({
         { href: "/apple-touch-icon.png", rel: "apple-touch-icon" },
         { href: "/site.webmanifest", rel: "manifest" },
       ],
-      script: siteConfig.ads.enabled
-        ? [
-            {
-              async: true,
-              crossorigin: "anonymous",
-              key: "adsense-loader",
-              src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-${siteConfig.ads.publisherId.replace(/^ca-/, "")}`,
-            },
-          ]
-        : [],
     },
   },
   compatibilityDate: "2025-01-01",

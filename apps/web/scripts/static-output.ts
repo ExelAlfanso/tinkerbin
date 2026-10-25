@@ -103,9 +103,20 @@ const add = (directive: string, ...origins: string[]) => {
 };
 
 const inlineScriptHashes = new Set<string>();
+const adScript = siteConfig.ads.enabled
+  ? `<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-${siteConfig.ads.publisherId.replace(/^ca-/, "")}" crossorigin="anonymous"></script>`
+  : "";
 for (const name of fs.readdirSync(out, { recursive: true })) {
   if (!name.endsWith(".html")) continue;
-  const html = fs.readFileSync(path.join(out, name), "utf-8");
+  const file = path.join(out, name);
+  let html = fs.readFileSync(file, "utf-8");
+  if (adScript && !html.includes(adScript)) {
+    if (!html.includes("<head>")) {
+      throw new Error(`Generated page has no <head>: ${name}`);
+    }
+    html = html.replace("<head>", `<head>${adScript}`);
+    fs.writeFileSync(file, html);
+  }
   for (const [, attributes, script] of html.matchAll(
     /<script\b([^>]*)>([\s\S]*?)<\/script>/gi
   )) {
