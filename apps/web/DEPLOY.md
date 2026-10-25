@@ -67,7 +67,7 @@ Pull requests do not deploy or receive Cloudflare credentials. Each push deploym
 
 3. Add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as GitHub Actions secrets. Repository secrets work for both environments when they share a Cloudflare account; use separate environment secrets when development and production must be isolated. The token needs account-level `Workers Scripts Write` and `Secrets Store Write` permissions for the static deployment and remote state store.
 
-   The workflow checks account access before deploying. If that check returns Cloudflare error `9106`, replace the secret with an active **API token** (not a Global API Key), confirm the Account ID belongs to the token's account, and check token expiry and IP restrictions. `alchemy provider check-env` only checks that the variables exist; it does not authenticate them.
+   The workflow checks account access before deploying. Cloudflare error `6003: Invalid request headers` means the token secret needs checking first: enter only the raw API token, without `Bearer `, quotes, a command, or surrounding whitespace. If access still fails, confirm the token is active, belongs to the configured Account ID, has the permissions above, and is not blocked by expiry or IP restrictions. `alchemy provider check-env` only checks that the variables exist; it does not authenticate them.
 
 4. Set `SITE_URL` in each environment to that environment's canonical HTTPS origin. Add any optional build-time variables from the table above to each environment as needed. If production and development use separate Cloudflare accounts, bootstrap the Alchemy state store once in each account.
 
