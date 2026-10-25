@@ -12,7 +12,7 @@
     "dev": "bun --cwd apps/web dev",
     "build": "bun --cwd apps/web generate",
     "preview": "bun --cwd apps/web preview",
-    "deploy:cloudflare": "bun alchemy deploy --stage prod",
+    "deploy:cloudflare": "bun --bun alchemy deploy --stage prod",
     "typecheck": "bun --cwd apps/web typecheck",
     "test": "bun test",
     "check": "ultracite check",
