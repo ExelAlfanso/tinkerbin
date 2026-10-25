@@ -65,7 +65,7 @@ Pull requests do not deploy or receive Cloudflare credentials. Each push deploym
 
 2. Create GitHub environments named `production` and `development`. Restrict their deployment branches to `master` and `dev`, respectively.
 
-3. In each environment, add a `CLOUDFLARE_API_TOKEN` secret and `CLOUDFLARE_ACCOUNT_ID` variable for its Cloudflare account. The token needs account-level `Workers Scripts Write` and `Secrets Store Write` permissions for the static deployment and remote state store. Use separate Cloudflare accounts and credentials if dev deployments must be isolated from production; otherwise, a token for the shared account can access both stages.
+3. Add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as GitHub Actions secrets. Repository secrets work for both environments when they share a Cloudflare account; use separate environment secrets when development and production must be isolated. The token needs account-level `Workers Scripts Write` and `Secrets Store Write` permissions for the static deployment and remote state store.
 
 4. Set `SITE_URL` in each environment to that environment's canonical HTTPS origin. Add any optional build-time variables from the table above to each environment as needed. If production and development use separate Cloudflare accounts, bootstrap the Alchemy state store once in each account.
 
