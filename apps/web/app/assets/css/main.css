@@ -6,6 +6,7 @@
   src: url(/assets/fonts/pixelify.woff2) format("woff2");
 }
 :root {
+  color-scheme: light dark;
   --bg: #eef1fa;
   --grid: #dde2f3;
   --ink: #14141f;
@@ -19,6 +20,8 @@
   --soft: #e3e6f5;
   --err: #c7254e;
   --ok: #12805c;
+  --ck1: #ffffff;
+  --ck2: #d6dbee;
   --accent: #ffe14a;
   --r: 10px;
   --display: "Pixelify Sans", ui-monospace, Menlo, Consolas, monospace;
@@ -27,7 +30,8 @@
     sans-serif;
 }
 @media (prefers-color-scheme: dark) {
-  :root {
+  :root:not([data-theme]) {
+    color-scheme: dark;
     --bg: #10101a;
     --grid: #1a1a29;
     --ink: #f1f2fa;
@@ -40,7 +44,29 @@
     --soft: #262638;
     --err: #ff8da8;
     --ok: #5fe0b0;
+    --ck1: #2b2b40;
+    --ck2: #1d1d2e;
   }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg: #10101a;
+  --grid: #1a1a29;
+  --ink: #f1f2fa;
+  --card: #191926;
+  --muted: #a3a7c4;
+  --line: #e9eaf7;
+  --shadow: #5a5cff;
+  --brand: #7d93ff;
+  --brand-ink: #10101a;
+  --soft: #262638;
+  --err: #ff8da8;
+  --ok: #5fe0b0;
+  --ck1: #2b2b40;
+  --ck2: #1d1d2e;
+}
+:root[data-theme="light"] {
+  color-scheme: light;
 }
 *,
 *::before,
@@ -989,16 +1015,6 @@ noscript .stage-note {
 }
 
 /* ── Background remover ── */
-:root {
-  --ck1: #ffffff;
-  --ck2: #d6dbee;
-}
-@media (prefers-color-scheme: dark) {
-  :root {
-    --ck1: #2b2b40;
-    --ck2: #1d1d2e;
-  }
-}
 .br-idle {
   display: grid;
   gap: 1rem;
