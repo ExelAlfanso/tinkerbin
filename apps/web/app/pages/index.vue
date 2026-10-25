@@ -1,12 +1,45 @@
 <script setup lang="ts">
+import "lenis/dist/lenis.css";
+import { VueLenis } from "lenis/vue";
+import { useTemplateRef } from "vue";
+
 import SiteAdSlot from "~/components/site/AdSlot.vue";
 import MascotArt from "~/components/site/MascotArt.vue";
 import ToolCard from "~/components/site/ToolCard.vue";
 import { bySlug, tools } from "~/data/tools";
 
+const lenisRef = useTemplateRef<InstanceType<typeof VueLenis>>("lenis");
+const lenisOptions = { smoothWheel: false };
 const siteUrl = useRuntimeConfig().public.siteUrl as string;
 const featured = bySlug["background-remover"]!;
 const otherTools = tools.filter((tool) => tool !== featured);
+
+const browseTools = (event: MouseEvent) => {
+  if (
+    event.defaultPrevented ||
+    event.button !== 0 ||
+    event.metaKey ||
+    event.ctrlKey ||
+    event.shiftKey ||
+    event.altKey
+  ) {
+    return;
+  }
+
+  const target = document.querySelector<HTMLElement>("#tools");
+  const lenis = lenisRef.value?.lenis;
+  if (!target || !lenis) {
+    return;
+  }
+
+  event.preventDefault();
+  if (window.location.hash !== "#tools") {
+    window.history.pushState(null, "", "#tools");
+  }
+  target.focus({ preventScroll: true });
+  lenis.scrollTo(target, { duration: 1 });
+};
+
 useSiteSeo({
   description:
     "Free browser tools for creators: remove image backgrounds, extract colors from images, generate color and pixel art palettes, and convert images to pixel art. No uploads.",
@@ -24,6 +57,7 @@ useSiteSeo({
 });
 </script>
 <template>
+  <VueLenis ref="lenis" root autoRaf :options="lenisOptions" />
   <main id="main">
     <section class="hero">
       <div class="hero-copy">
@@ -36,7 +70,9 @@ useSiteSeo({
           <NuxtLink class="btn btn-primary btn-big" to="/background-remover/"
             >Remove a background</NuxtLink
           >
-          <NuxtLink class="btn btn-big" to="#tools">Browse tools</NuxtLink>
+          <a class="btn btn-big" href="#tools" @click="browseTools"
+            >Browse tools</a
+          >
         </div>
       </div>
       <div class="bench" aria-hidden="true">
@@ -47,7 +83,7 @@ useSiteSeo({
       </div>
     </section>
     <SiteAdSlot slot="top" />
-    <section id="tools" aria-labelledby="h-tools">
+    <section id="tools" aria-labelledby="h-tools" tabindex="-1">
       <h2 id="h-tools" class="section-h">Tools</h2>
       <ul class="tools tools-featured">
         <ToolCard :tool="featured" wide />
