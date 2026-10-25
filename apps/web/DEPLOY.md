@@ -67,6 +67,8 @@ Pull requests do not deploy or receive Cloudflare credentials. Each push deploym
 
 3. Add `CLOUDFLARE_API_TOKEN` and `CLOUDFLARE_ACCOUNT_ID` as GitHub Actions secrets. Repository secrets work for both environments when they share a Cloudflare account; use separate environment secrets when development and production must be isolated. The token needs account-level `Workers Scripts Write` and `Secrets Store Write` permissions for the static deployment and remote state store.
 
+   The workflow checks account access before deploying. If that check returns Cloudflare error `9106`, replace the secret with an active **API token** (not a Global API Key), confirm the Account ID belongs to the token's account, and check token expiry and IP restrictions. `alchemy provider check-env` only checks that the variables exist; it does not authenticate them.
+
 4. Set `SITE_URL` in each environment to that environment's canonical HTTPS origin. Add any optional build-time variables from the table above to each environment as needed. If production and development use separate Cloudflare accounts, bootstrap the Alchemy state store once in each account.
 
 Without `SITE_URL`, the existing build intentionally marks the site noindex and omits its sitemap. The `dev` deployment starts after a `dev` branch is pushed to GitHub.
