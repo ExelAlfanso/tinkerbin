@@ -26,6 +26,7 @@ export default defineNuxtConfig({
             {
               async: true,
               crossorigin: "anonymous",
+              key: "adsense-loader",
               src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-${siteConfig.ads.publisherId.replace(/^ca-/, "")}`,
             },
           ]
