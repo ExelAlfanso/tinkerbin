@@ -1,3 +1,4 @@
+import { createHash } from "node:crypto";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
@@ -100,6 +101,25 @@ const csp: Record<string, string[]> = {
 const add = (directive: string, ...origins: string[]) => {
   csp[directive] = [...new Set([...(csp[directive] || []), ...origins])];
 };
+
+const inlineScriptHashes = new Set<string>();
+for (const name of fs.readdirSync(out, { recursive: true })) {
+  if (!name.endsWith(".html")) continue;
+  const html = fs.readFileSync(path.join(out, name), "utf-8");
+  for (const [, attributes, script] of html.matchAll(
+    /<script\b([^>]*)>([\s\S]*?)<\/script>/gi
+  )) {
+    if (
+      script &&
+      !/\btype\s*=\s*["']application\/(?:ld\+)?json["']/i.test(attributes)
+    ) {
+      inlineScriptHashes.add(
+        `'sha256-${createHash("sha256").update(script).digest("base64")}'`
+      );
+    }
+  }
+}
+add("script-src", ...[...inlineScriptHashes].sort());
 
 const { analytics } = siteConfig;
 if (analytics.provider === "plausible" && analytics.plausibleDomain) {
