@@ -1,0 +1,58 @@
+name: CI/CD
+
+on:
+  push:
+    branches: [master, dev]
+  pull_request:
+    branches: [master, dev]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: tinkerbin-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  checks:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - run: bun install --frozen-lockfile
+      - run: bun run typecheck
+      - run: bun run test
+      - if: github.event_name == 'pull_request'
+        run: bun run build
+
+  deploy:
+    if: github.event_name == 'push'
+    needs: checks
+    runs-on: ubuntu-latest
+    environment:
+      name: ${{ github.ref_name == 'master' && 'production' || 'development' }}
+    env:
+      ALCHEMY_STAGE: ${{ github.ref_name == 'master' && 'prod' || 'dev' }}
+      CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+      CLOUDFLARE_ACCOUNT_ID: ${{ vars.CLOUDFLARE_ACCOUNT_ID }}
+      SITE_URL: ${{ vars.SITE_URL }}
+      CONTACT_EMAIL: ${{ vars.CONTACT_EMAIL }}
+      ADSENSE_ENABLED: ${{ vars.ADSENSE_ENABLED }}
+      ADSENSE_PUBLISHER_ID: ${{ vars.ADSENSE_PUBLISHER_ID }}
+      ADSENSE_SLOTS: ${{ vars.ADSENSE_SLOTS }}
+      ANALYTICS_PROVIDER: ${{ vars.ANALYTICS_PROVIDER }}
+      CF_BEACON_TOKEN: ${{ vars.CF_BEACON_TOKEN }}
+      PLAUSIBLE_DOMAIN: ${{ vars.PLAUSIBLE_DOMAIN }}
+      GOATCOUNTER_URL: ${{ vars.GOATCOUNTER_URL }}
+      CSP_REPORT_ONLY: ${{ vars.CSP_REPORT_ONLY }}
+      HSTS_MAX_AGE: ${{ vars.HSTS_MAX_AGE }}
+    steps:
+      - uses: actions/checkout@v7
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: 1.4.4
+      - run: bun install --frozen-lockfile
+      - run: bun alchemy provider check-env --provider Cloudflare
+      - run: bun alchemy deploy --stage "$ALCHEMY_STAGE" --yes

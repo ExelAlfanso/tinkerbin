@@ -9,9 +9,11 @@
     "typecheck": "nuxt typecheck"
   },
   "dependencies": {
+    "@pinia/nuxt": "^1.0.3",
     "@tinkerbin/background-engine": "workspace:*",
     "@tinkerbin/tools-core": "workspace:*",
     "nuxt": "^4.6.2",
+    "pinia": "^4.1.0",
     "vue": "^3.5.0"
   },
   "devDependencies": {

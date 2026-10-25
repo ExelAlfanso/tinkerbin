@@ -1,3 +1,4 @@
+import { createPinia } from "pinia";
 import { createRenderer, defineComponent, h } from "vue";
 
 interface HostNode {
@@ -77,6 +78,7 @@ export const mountComposable = <T>(setup: () => T) => {
       },
     })
   );
+  app.use(createPinia());
   app.mount(hostNode("container"));
   if (result === undefined) {
     app.unmount();

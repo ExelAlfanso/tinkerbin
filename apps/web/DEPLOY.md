@@ -44,6 +44,33 @@ bun run deploy:cloudflare
 
 Alchemy builds `apps/web/.output/public`, deploys it to the stable `prod` stage as an assets-only Worker, returns its URL, preserves folder routes with trailing slashes, and serves the generated `404.html` for unknown paths. The CLI previews the plan and asks before applying it. No custom domain is configured by this stack.
 
+## GitHub Actions CI/CD
+
+`.github/workflows/deploy.yml` checks pull requests targeting `master` or `dev`. It runs the app typecheck and tests, and generates the static site for pull requests. Pushes to either branch deploy through Alchemy:
+
+| Branch | Alchemy stage | GitHub environment |
+| --- | --- | --- |
+| `master` | `prod` | `production` |
+| `dev` | `dev` | `development` |
+
+Pull requests do not deploy or receive Cloudflare credentials. Each push deployment builds `apps/web/.output/public` through `alchemy.run.ts` and publishes it as Cloudflare Workers Static Assets.
+
+### One-time setup
+
+1. Bootstrap Alchemy's shared Cloudflare state store once from a trusted local machine:
+
+   ```sh
+   bun alchemy state bootstrap --backend cloudflare
+   ```
+
+2. Create GitHub environments named `production` and `development`. Restrict their deployment branches to `master` and `dev`, respectively.
+
+3. In each environment, add a `CLOUDFLARE_API_TOKEN` secret and `CLOUDFLARE_ACCOUNT_ID` variable for its Cloudflare account. The token needs account-level `Workers Scripts Write` and `Secrets Store Write` permissions for the static deployment and remote state store. Use separate Cloudflare accounts and credentials if dev deployments must be isolated from production; otherwise, a token for the shared account can access both stages.
+
+4. Set `SITE_URL` in each environment to that environment's canonical HTTPS origin. Add any optional build-time variables from the table above to each environment as needed. If production and development use separate Cloudflare accounts, bootstrap the Alchemy state store once in each account.
+
+Without `SITE_URL`, the existing build intentionally marks the site noindex and omits its sitemap. The `dev` deployment starts after a `dev` branch is pushed to GitHub.
+
 ## Local commands
 
 ```sh
@@ -54,6 +81,8 @@ bun run preview
 bun run test
 bun run deploy:cloudflare
 ```
+
+For a local development-stage deploy, run `bun alchemy deploy --stage dev`.
 
 ## Privacy and third-party assets
 

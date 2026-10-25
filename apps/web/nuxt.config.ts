@@ -26,6 +26,7 @@ export default defineNuxtConfig({
   compatibilityDate: "2025-01-01",
   css: ["~/assets/css/main.css"],
   devtools: { enabled: false },
+  modules: ["@pinia/nuxt"],
   nitro: { prerender: { crawlLinks: false, routes: prerenderRoutes } },
   routeRules: { "/**": { prerender: true } },
   runtimeConfig: {
