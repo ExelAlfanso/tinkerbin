@@ -14,17 +14,6 @@ onMounted(() => {
   if (!slotId || !/^pub-\d{8,20}$/.test(publisherId)) {
     return;
   }
-  const script = document.querySelector<HTMLScriptElement>(
-    "script[data-tinkerbin-ads]"
-  );
-  if (!script) {
-    const loader = document.createElement("script");
-    loader.async = true;
-    loader.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-${publisherId}`;
-    loader.crossOrigin = "anonymous";
-    loader.dataset.tinkerbinAds = "true";
-    document.head.append(loader);
-  }
   const adsWindow = window as Window & {
     adsbygoogle?: Record<string, unknown>[];
   };

@@ -26,7 +26,6 @@ export default defineNuxtConfig({
             {
               async: true,
               crossorigin: "anonymous",
-              "data-tinkerbin-ads": "true",
               src: `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-${siteConfig.ads.publisherId.replace(/^ca-/, "")}`,
             },
           ]
